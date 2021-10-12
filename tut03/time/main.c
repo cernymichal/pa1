@@ -17,8 +17,9 @@ int fill_with_zeroes(char *string, int n) {
 int input_time(int *t) {
     int h, m, s, ms;
     char ms_str[] = "000";
+    int read = scanf("%d : %d : %d , %3[0-9]", &h, &m, &s, ms_str);
 
-    if (scanf("%d : %d : %d , %3[0-9]", &h, &m, &s, ms_str) < 4 || fill_with_zeroes(ms_str, 4) || sscanf(ms_str, "%d", &ms) < 1 || h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59 || ms < 0 || ms > 999) {
+    if (read < 4 || fill_with_zeroes(ms_str, 4) || sscanf(ms_str, "%d", &ms) < 1 || fgetc(stdin) != '\n' || h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59 || ms < 0 || ms > 999) {
         printf("Nespravny vstup.\n");
         return 1;
     }
