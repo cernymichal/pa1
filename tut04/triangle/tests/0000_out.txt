@@ -1,0 +1,3 @@
+Zadejte a, b, c (oddelene mezerami):
+obvod: 3.000000
+obsah: 0.433013
