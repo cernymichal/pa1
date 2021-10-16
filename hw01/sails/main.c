@@ -54,9 +54,27 @@ int input_overlap(double *overlap) {
     return 0;
 }
 
+int double_ceil(double a) {
+    double i;
+    double f = modf(a, &i);
+    if (f < __DBL_EPSILON__ * 1e4 * fabs(a))
+        return (int)i;
+
+    return (int)ceil(a);
+}
+
 int solve(double fabric_w, double fabric_h, double sail_w, double sail_h, double overlap, int *result) {
-    int x = (int) ceil((sail_w - overlap) / (fabric_w - overlap));
-    int y = (int) ceil((sail_h - overlap) / (fabric_h - overlap));
+    int x, y;
+
+    if (double_ceil(sail_w / fabric_w) == 1.)
+        x = 1;
+    else
+        x = (int) double_ceil((sail_w - overlap) / (fabric_w - overlap));
+    
+    if (double_ceil(sail_h / fabric_h) == 1.)
+        y = 1;
+    else
+        y = (int) double_ceil((sail_h - overlap) / (fabric_h - overlap));
 
     if (x < 0 || y < 0)
         return 1;
