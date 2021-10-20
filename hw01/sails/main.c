@@ -84,7 +84,8 @@ int solve(double fabric_w, double fabric_h, double sail_w, double sail_h, double
 }
 
 int solve_rotate(double fabric_w, double fabric_h, double sail_w, double sail_h, double overlap, int *result) {
-    int a, b = INT_MAX;
+    int a = INT_MAX;
+    int b = INT_MAX;
     
     int err_a = solve(fabric_w, fabric_h, sail_w, sail_h, overlap, &a);
     int err_b = solve(fabric_h, fabric_w, sail_w, sail_h, overlap, &b);
