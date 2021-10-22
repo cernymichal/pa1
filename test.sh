@@ -26,7 +26,7 @@ SHALLOW=false
 TESTS_DIR='./tests'
 EXECUTABLE='./main'
 
-while getopts 'qsf:x:' flag
+while getopts 'qsd:x:' flag
 do
     case "${flag}" in
         q)
@@ -35,19 +35,11 @@ do
         s)
             SHALLOW=true
             ;;
-        f)
+        d)
             TESTS_DIR=${OPTARG}
             ;;
         x)
             EXECUTABLE=${OPTARG}
-            ;;
-        \?)
-            echo "Invalid option: -$OPTARG" >&2
-            exit 1
-            ;;
-        :)
-            echo "Option -$OPTARG requires an argument." >&2
-            exit 1
             ;;
     esac
 done
