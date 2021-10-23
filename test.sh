@@ -21,6 +21,8 @@ SUCCESS="${L_BRACKET}${WBOLD}${GREEN_BG}V${NC}${R_BRACKET}"
 FAIL="${L_BRACKET}${WBOLD}${RED_BG}X${NC}${R_BRACKET}"
 INDENT="    "
 
+EXIT=0
+
 QUIET=false
 SHALLOW=false
 TESTS_DIR='./tests'
@@ -70,6 +72,7 @@ do
         num=$(echo "$num" | grep -o '....$')
         if ! $(echo "$output" | diff "$out_file" - > /dev/null)
         then
+            EXIT=1
             printf "$FAIL $num\n"
             
             if ! $QUIET
@@ -82,3 +85,4 @@ do
     done
 done
 
+exit "$EXIT"
