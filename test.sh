@@ -3,8 +3,10 @@
 <<help
 
 -q - quiet mode
+-a - show passing tests' output as well 
 -s - shallow mode
--d=directory - specify directcory with tests (default ./tests)
+-d - show diff instead of output
+-t=directory - specify directcory with tests (default ./tests)
 -x=executable - specify executable to test on (default ./main)
 
 help
@@ -24,20 +26,28 @@ INDENT="    "
 EXIT=0
 
 QUIET=false
+ALL_OUTPUT=false
 SHALLOW=false
+SHOW_DIFF=false
 TESTS_DIR='./tests'
 EXECUTABLE='./main'
 
-while getopts 'qsd:x:' flag
+while getopts 'qasdt:x:' flag
 do
     case "${flag}" in
         q)
             QUIET=true
             ;;
+        a)
+            ALL_OUTPUT=true
+            ;;
         s)
             SHALLOW=true
             ;;
         d)
+            SHOW_DIFF=true
+            ;;
+        t)
             TESTS_DIR=${OPTARG}
             ;;
         x)
@@ -77,10 +87,25 @@ do
             
             if ! $QUIET
             then
-                printf "${WUNDER}Input:${NC}\n$(cat "$in_file")\n${WUNDER}Expected:${NC}\n$(cat "$out_file")\n${WUNDER}Actual:${NC}\n$output\n" | sed "s/^/$INDENT/"
+                if $SHOW_DIFF
+                then
+                    printf "${WUNDER}Diff:${NC}\n$(echo "$output" | diff -u --color=always "$out_file" - | tail --lines=+3)\n" | sed "s/^/$INDENT/"
+                else
+                    printf "${WUNDER}Input:${NC}\n$(cat "$in_file")\n${WUNDER}Expected output:${NC}\n$(cat "$out_file")\n${WUNDER}Actual output:${NC}\n$output\n" | sed "s/^/$INDENT/"
+                fi
             fi
         else
             printf "$SUCCESS $num\n"
+
+            if $ALL_OUTPUT && ! $QUIET
+            then
+                if $SHOW_DIFF
+                then
+                    printf "${WUNDER}Diff:${NC}\n$(echo "$output" | diff -u --color=always "$out_file" - | tail --lines=+3)\n" | sed "s/^/$INDENT/"
+                else
+                    printf "${WUNDER}Input:${NC}\n$(cat "$in_file")\n${WUNDER}Output:${NC}\n$output\n" | sed "s/^/$INDENT/"
+                fi
+            fi
         fi
     done
 done
