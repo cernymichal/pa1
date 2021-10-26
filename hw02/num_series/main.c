@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 int clear_stdin(void) {
     while (true) {
@@ -30,15 +31,16 @@ int print_incorrect_input(void) {
 }
 
 void print_result(long long result, int base, int digit) {
-    int result_length = 32 - (base - 2);
+    int result_length = log(2) / log(base) * sizeof(result) * 8;
+
     int skip = 1;
-    for (int i = 0; i < result_length; i++) {
-        long long p = powll(base, result_length - i - 1);
+    for (int i = 1; i <= result_length; i++) {
+        long long p = powll(base, result_length - i);
         int number = result / p;
         result -= number * p;
 
         if (skip) {
-            if (!number && i < result_length - 1)
+            if (!number && i < result_length)
                 continue;
             else
                 skip = 0;
@@ -55,13 +57,6 @@ void print_result(long long result, int base, int digit) {
         printf(" ");
 
     printf("^\n");
-}
-
-int input_pos(long long *pos, int *base) {
-    if (scanf(" %lld %d", pos, base) != 2 || *pos < 0 || *base < 2 || *base > 36)
-        return 1;
-
-    return 0;
 }
 
 void solve(long long pos, int base, long long *result, int *digit) {
@@ -98,12 +93,17 @@ int main (void) {
         long long pos;
         int base;
         
-        int input_err = input_pos(&pos, &base);
-        
-        if (clear_stdin())
-            break;
+        int scanned = scanf(" %lld %d", &pos, &base);
+        int eof = clear_stdin();
 
-        if (input_err)
+        if (eof) {
+            if (scanned > 0)
+                return print_incorrect_input();    
+            else
+                break;
+        }
+        
+        if (scanned != 2  || pos < 0 || base < 2 || base > 36)
             return print_incorrect_input();
 
         int digit;
