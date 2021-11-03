@@ -14,20 +14,14 @@ int digit_consumption_6[] = {4, 5, 2, 3, 3, 3};
 int digit_consumption_10[] = {4, 5, 2, 3, 3, 1, 5, 4, 1, 2};
 
 // sums of digit_consumption_n
-#define CONSUMPTION_DIGIT_3 12
-#define CONSUMPTION_DIGIT_4 14
-#define CONSUMPTION_DIGIT_6 20
-#define CONSUMPTION_DIGIT_10 30
+#define CONSUMPTION_DIGIT_3 (4 + 5 + 3)
+#define CONSUMPTION_DIGIT_4 (4 + 5 + 2 + 3)
+#define CONSUMPTION_DIGIT_6 (4 + 5 + 2 + 3 + 3 + 3)
+#define CONSUMPTION_DIGIT_10 (4 + 5 + 2 + 3 + 3 + 1 + 5 + 4 + 1 + 2)
 
-#define CONSUMPTION_MINUTE CONSUMPTION_DIGIT_6 + 6 * CONSUMPTION_DIGIT_10
-#define CONSUMPTION_HOUR CONSUMPTION_MINUTE + 60 * CONSUMPTION_MINUTE
-#define CONSUMPTION_DAY CONSUMPTION_DIGIT_3 + 2 * CONSUMPTION_DIGIT_10 + CONSUMPTION_DIGIT_4 + 24 * CONSUMPTION_HOUR
-
-void swap_vars(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
-}
+#define CONSUMPTION_MINUTE (CONSUMPTION_DIGIT_6 + 6 * CONSUMPTION_DIGIT_10)
+#define CONSUMPTION_HOUR (CONSUMPTION_MINUTE + 60 * CONSUMPTION_MINUTE)
+#define CONSUMPTION_DAY (CONSUMPTION_DIGIT_3 + 2 * CONSUMPTION_DIGIT_10 + CONSUMPTION_DIGIT_4 + 24 * CONSUMPTION_HOUR)
 
 int is_leap_year(int year) {
     if (year % 4 == 0) {
@@ -62,32 +56,30 @@ int days_in_month(int month, int leap_year) {
     return 31;
 }
 
-// in minutes from MIN_YEAR
-/*
-long date_to_timestamp(int year, int month, int day, int hour, int minute) {
-    long timestamp = 0;
-
-    for (int y = MIN_YEAR; y < year; y++)
-        timestamp += (leap_year ? 366 : 365) * 24 * 60;
-
-    for (int m = 1; m < month; m++)
-        timestamp += days_in_month(month, leap_year) * 24 * 60;
-
-    timestamp += (day - 1) * 24 * 60;
-    timestamp += hour * 60;
-    timestamp += minute;
-
-    return timestamp;
-}
-*/
-
 int valid_date(int year, int month, int day, int hour, int minute) {
     if (
         year < MIN_YEAR
         || month < 1 || month > 12
         || day < 1 || day > days_in_month(month, is_leap_year(year))
-        || hour < 1 || hour > 23
-        || minute < 1 || minute > 59
+        || hour < 0 || hour > 23
+        || minute < 0 || minute > 59
+    )
+        return 0;
+
+    return 1;
+}
+
+// date_1 <= date_2
+int date_le(
+    int y1, int m1, int d1, int h1, int i1,
+    int y2, int m2, int d2, int h2, int i2
+) {
+    if (
+        y1 > y2
+        || (y1 == y2 && m1 > m2)
+        || (y1 == y2 && m1 == m2 && d1 > d2)
+        || (y1 == y2 && m1 == m2 && d1 == d2 && h1 > h2)
+        || (y1 == y2 && m1 == m2 && d1 == d2 && h1 == h2 && i1 > i2)
     )
         return 0;
 
@@ -96,10 +88,14 @@ int valid_date(int year, int month, int day, int hour, int minute) {
 
 long long consumption_to_end_of_hour(int minute) {
     long long consumption = 0;
-
-    for (; minute % 10 != 0; minute++)
-        consumption += digit_consumption_10[minute % 10] + CONSUMPTION_MINUTE;
     
+    if (minute % 10 != 0) {
+        consumption += digit_consumption_6[minute / 10];
+
+        for (; minute % 10 != 0; minute++)
+            consumption += digit_consumption_10[minute % 10] + CONSUMPTION_MINUTE;
+    }
+
     for (; minute < 60; minute += 10)
         consumption += digit_consumption_6[minute / 10] + CONSUMPTION_DIGIT_10 + 10 * CONSUMPTION_MINUTE;
 
@@ -112,7 +108,7 @@ long long consumption_to_end_of_day(int hour, int minute) {
     if (hour == 23 || hour % 10 == 9)
         consumption += digit_consumption_3[hour / 10];
     
-    consumption += digit_consumption_10[hour];
+    consumption += digit_consumption_10[hour % 10];
 
     hour++;
 
@@ -120,7 +116,7 @@ long long consumption_to_end_of_day(int hour, int minute) {
         if (hour == 23 || hour % 10 == 9)
             consumption += digit_consumption_3[hour / 10];
 
-        consumption += digit_consumption_10[hour] + CONSUMPTION_HOUR;
+        consumption += digit_consumption_10[hour % 10] + CONSUMPTION_HOUR;
     }
     
     return consumption;
@@ -146,7 +142,7 @@ long long consumption_to_end_of_year(int year, int month, int day, int hour, int
     month++;
 
     for(; month <= 12; month++)
-        consumption += days_in_month(month, leap_year) * CONSUMPTION_DAY;
+        consumption += (long long)days_in_month(month, leap_year) * CONSUMPTION_DAY;
 
     return consumption;
 }
@@ -154,31 +150,20 @@ long long consumption_to_end_of_year(int year, int month, int day, int hour, int
 int energyConsumption(
     int y1, int m1, int d1, int h1, int i1,
     int y2, int m2, int d2, int h2, int i2,
-    long long int *consumption
+    long long int * consumption
 ) {
-    if (!valid_date(y1, m1, d1, h1, i1) || !valid_date(y2, m2, d2, h2, i2))
-        return 0;
-    
-    // ensure date_1 <= date_2
     if (
-        y1 > y2
-        || (y1 == y2 && m1 > m2)
-        || (y1 == y2 && m1 == m2 && d1 > d2)
-        || (y1 == y2 && m1 == m2 && d1 == d2 && h1 > h2)
-        || (y1 == y2 && m1 == m2 && d1 == d2 && h1 == h2 && i1 > i2)
-    ) {
-        swap_vars(&y1, &y2);
-        swap_vars(&m1, &m2);
-        swap_vars(&d1, &d2);
-        swap_vars(&h1, &h2);
-        swap_vars(&i1, &i2);
-    }
-    
+        !valid_date(y1, m1, d1, h1, i1)
+        || !valid_date(y2, m2, d2, h2, i2)
+        || !date_le(y1, m1, d1, h1, i1, y2, m2, d2, h2, i2)
+    )
+        return 0;
+
     *consumption = consumption_to_end_of_year(y1, m1, d1, h1, i1);
     y1++;
 
-    for(; y1 < y2; y1++)
-        *consumption += (is_leap_year(y1) ? 366 : 365) * CONSUMPTION_DAY;
+    for(; y1 <= y2; y1++)
+        *consumption += (long long)(is_leap_year(y1) ? 366 : 365) * CONSUMPTION_DAY;
 
     *consumption -= consumption_to_end_of_year(y2, m2, d2, h2, i2);
 
