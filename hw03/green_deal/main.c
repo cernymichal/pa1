@@ -7,6 +7,8 @@
 #endif /* __PROGTEST__ */
 
 #define MIN_YEAR 1600
+#define LEAP_YEAR_CYCLE_Y 4000
+#define LEAP_YEAR_CYCLE_D (long long)(LEAP_YEAR_CYCLE_Y * (365 + 1. / 4 - 1. / 100 + 1. / 400 - 1. / 4000))
 
 int digit_consumption_3[] = {4, 5, 3};
 int digit_consumption_4[] = {4, 5, 2, 3};
@@ -162,11 +164,17 @@ int energyConsumption(
     *consumption = consumption_to_end_of_year(y1, m1, d1, h1, i1);
     y1++;
 
+    int y_diff = y2 - y1;
+    if (y_diff >= LEAP_YEAR_CYCLE_Y) {
+        *consumption += (y_diff / LEAP_YEAR_CYCLE_Y) * LEAP_YEAR_CYCLE_D * CONSUMPTION_DAY;
+        y1 += y_diff - y_diff % LEAP_YEAR_CYCLE_Y;
+    }
+
     for(; y1 <= y2; y1++)
         *consumption += (long long)(is_leap_year(y1) ? 366 : 365) * CONSUMPTION_DAY;
 
     *consumption -= consumption_to_end_of_year(y2, m2, d2, h2, i2);
-
+    
     return 1;
 }
  
