@@ -7,18 +7,30 @@
 #define MAX_ID 99999
 #define ID_COUNT (MAX_ID + 1)
 
+typedef struct Visit_s {
+    int client_id;
+    int last_client_visit;
+} Visit;
+
+typedef struct Client_s {
+    int visits;
+    int last_visit;
+} Client;
+
 typedef struct State_s {
     int visits_total;
-    int visits_chrono[MAX_VISITS];
-    int client_visits[ID_COUNT];
+    Visit visits[MAX_VISITS];
+    Client clients[ID_COUNT];
 } State;
 
 State * new_state(void) {
     State * state = (State *) malloc(sizeof(State));
     state->visits_total = 0;
 
-    for (int i = 0; i < ID_COUNT; i++)
-        state->client_visits[i] = 0;
+    for (int i = 0; i < ID_COUNT; i++) {
+        state->clients[i].visits = 0;
+        state->clients[i].last_visit = -1;
+    }
 
     return state;
 } 
@@ -61,29 +73,26 @@ int get_input(State * state, char * op, int * arg1, int * arg2) {
 }
 
 int add_visit(State * state, int id) {
-    state->visits_chrono[state->visits_total] = id;
-    state->visits_total++;
+    Visit * visit = &state->visits[state->visits_total];
+    Client * client = &state->clients[id];
     
-    state->client_visits[id]++;
+    visit->client_id = id;
+    visit->last_client_visit = client->last_visit;
+    
+    client->visits++;
+    client->last_visit = state->visits_total;
+    
+    state->visits_total++;
 
-    return state->client_visits[id];
+    return client->visits;
 }
 
 int count_unique_visits(State * state, int start, int end) {
-    int * clients = (int *) malloc(ID_COUNT * sizeof(int));
-
-    for (int i = 0; i < ID_COUNT; i++)
-        clients[i] = 0;
-
-    for (int i = start; i <= end; i++)
-        clients[state->visits_chrono[i]] += 1;
-
     int unique = 0;
-    for (int i = 0; i < ID_COUNT; i++)
-        if (clients[i] > 0)
+    for (int i = start; i <= end; i++) {
+        if (state->visits[i].last_client_visit < start)
             unique++;
-    
-    free(clients);
+    }
 
     return unique;
 }
@@ -124,7 +133,7 @@ int main_loop(State * state) {
     return 0;
 }
 
-int main (void) {
+int main(void) {
     State * state = new_state();
 
     int return_code = main_loop(state);
