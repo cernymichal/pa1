@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <ctype.h>
 
 #define NAME_LENGTH 100
-#define INPUT_LINE_LENGTH 128
 
 typedef struct Product_s {
-    char name[NAME_LENGTH];
+    char * name;
     long long count;
     struct Product_s * next;
     struct Product_s * prev;
@@ -28,6 +28,7 @@ ProductList * new_product_list(void) {
 void free_product_list(ProductList * list) {
     for (Product * product = list->first; product; ) {
         Product * next_product = product->next;
+        free(product->name);
         free(product);
         product = next_product;
     }
@@ -36,9 +37,10 @@ void free_product_list(ProductList * list) {
 }
 
 // allocate new Product
-Product * new_product(char name[NAME_LENGTH]) {
+Product * new_product(char * name) {
     Product * product = (Product *) malloc(sizeof(*product));
-    strcpy(product->name, name);
+    //strcpy(product->name, name);
+    product->name = name;
     product->count = 1;
     product->next = NULL;
     product->prev = NULL;
@@ -47,7 +49,7 @@ Product * new_product(char name[NAME_LENGTH]) {
 }
 
 // add a new product at the end of list
-void product_list_add(ProductList * list, char name[NAME_LENGTH]) {
+void product_list_add(ProductList * list, char * name) {
     Product * product = new_product(name);
 
     if (!list->first)
@@ -89,7 +91,8 @@ void product_list_insert_before(ProductList * list, Product * product, Product *
 }
 
 // increment the count of product in list if it exists or add a new one
-void product_increment(ProductList * list, char name[NAME_LENGTH]) {
+// returns 1 if a new product was created
+int product_increment(ProductList * list, char * name) {
     // try to find the product
     Product * product = list->first;
     while (product) {
@@ -101,7 +104,7 @@ void product_increment(ProductList * list, char name[NAME_LENGTH]) {
 
     if (!product) {
         product_list_add(list, name);
-        return;
+        return 1;
     }
 
     product->count++;
@@ -116,7 +119,7 @@ void product_increment(ProductList * list, char name[NAME_LENGTH]) {
     }
 
     if (prev == product->prev)
-        return;
+        return 0;
 
     product_list_remove(list, product);
 
@@ -125,7 +128,9 @@ void product_increment(ProductList * list, char name[NAME_LENGTH]) {
     else
         prev = prev->next;
     
-    product_list_insert_before(list, product, prev);   
+    product_list_insert_before(list, product, prev);
+
+    return 0;
 }
 
 int print_incorrect_input() {
@@ -133,60 +138,90 @@ int print_incorrect_input() {
     return 1;
 }
 
-void print_top_products(ProductList * list, int leaderboard, int count) {
-    for (Product * product = list->first; product; product = product->next)
-        printf("%s %lld\n", product->name, product->count);
+void print_top_products(ProductList * list, int leaderboard, int top_count) {
+    long long sum = 0;
+    int counted = 0;
+    
+    for (Product * product = list->first; product && counted < top_count; ) {
+        int current_count = product->count;
+        int starting_count = counted;
+        int places = 0;
+
+        for (Product * p = product; p && p->count == current_count; p = p->next)
+            places++;
+
+        sum += places * current_count;
+        counted += places;
+
+        for (; product && product->count == current_count; product = product->next) {
+            if (leaderboard) {
+                if (places > 1)
+                    printf("%d.-%d. ", starting_count + 1, places + starting_count);
+                else
+                    printf("%d. ", counted);
+
+                printf("%s, %lldx\n", product->name, product->count);
+            }
+        }
+    }
+
+    printf("Nejprodavanejsi zbozi: prodano %lld kusu\n", sum);
+}
+
+// clears stdin to the next newline or EOF
+// return 2 for EOF
+//        1 for excess characters
+int clear_stdin(void) {
+    int excess = 0;
+    while (true) {
+        char c = getc(stdin);
+        if (c == EOF)
+            return 2;
+        else if (c == '\n')
+            break;
+        else if (!isspace(c))
+            excess = 1;
+    }
+
+    return excess;
 }
 
 // query user for leaderboard count
 int get_top_count(int * top_count) {
-    char line[INPUT_LINE_LENGTH];
-    char * fgets_ret = fgets(line, INPUT_LINE_LENGTH, stdin);
-
-    // if EOF
-    if (fgets_ret == NULL)
+    if (scanf(" %d", top_count) != 1 || *top_count < 1)
         return 1;
 
-    if (sscanf(line, " %d", top_count) != 1 || *top_count < 1)
-        return 1;
-
-    return 0;
+    return clear_stdin();
 }
 
 // query user for command
-int get_input(char * operation, char name[NAME_LENGTH]) {
-    char line[INPUT_LINE_LENGTH];
-    char * fgets_ret = fgets(line, INPUT_LINE_LENGTH, stdin);
+int get_input(char * operation, char ** name) {
+    int scanned = scanf(" %1c", operation);
 
-    // if EOF
-    if (fgets_ret == NULL)
+    if (scanned == EOF)
         return 2;
-
-    int scanned = sscanf(line, " %1c %99s ", operation, name);
 
     if (scanned < 1 || !(*operation == '+' || *operation == '#' || *operation == '?'))
         return 1;
 
-    if (*operation == '+' && scanned != 2)
-        return 1;
+    if (*operation == '+') {
+        *name = (char *) malloc(sizeof(char) * NAME_LENGTH);
+        if (scanf(" %99s", *name) != 1)
+            return 1;
+    }
 
-    if (*operation == '#' && scanned != 1)
-        return 1;
-
-    if (*operation == '?' && scanned != 1)
-        return 1;
-
-    return 0;
+    return clear_stdin();
 }
 
-void asserts(void) {
-    char name1[NAME_LENGTH];
+#ifndef __PROGTEST__
+
+void test_product_list(void) {
+    char * name1 = (char *) malloc(sizeof(char) * NAME_LENGTH);
+    char * name2 = (char *) malloc(sizeof(char) * NAME_LENGTH);
+    char * name3 = (char *) malloc(sizeof(char) * NAME_LENGTH);
+
     strcpy(name1, "Mleko");
-
-    char name2[NAME_LENGTH];
     strcpy(name2, "Pecivo");
-
-    char name3[NAME_LENGTH];
     strcpy(name3, "Maso");
 
     ProductList * product_list = new_product_list();
@@ -222,6 +257,8 @@ void asserts(void) {
     free_product_list(product_list);
 }
 
+#endif
+
 // main program loop, returns program exit code
 int main_loop(ProductList * product_list) {
     int top_count;
@@ -231,19 +268,26 @@ int main_loop(ProductList * product_list) {
 
     printf("Pozadavky:\n");
     while (1) {
-        char operation = 0;
-        char name[NAME_LENGTH];
+        char operation;
+        char * name = NULL;
 
-        int input_result = get_input(&operation, name);
+        int input_result = get_input(&operation, &name);
 
-        if (input_result == 1)
+        if (input_result == 1) {
+            free(name);
             return print_incorrect_input();
-        else if (input_result == 2) // EOF
+        }
+        else if (input_result == 2) { // EOF
+            free(name);
             break;
+        }
+    
+        // free name if it wasn't linked to a product
+        int free_name = 1;
 
         switch (operation) {
             case '+':
-                product_increment(product_list, name);
+                free_name = !product_increment(product_list, name);
                 break;
             case '#':
                 print_top_products(product_list, 1, top_count); // top products sum with leaderboard
@@ -254,13 +298,18 @@ int main_loop(ProductList * product_list) {
             default:
                 return 1;
         }
+
+        if (free_name)
+            free(name);
     }
 
     return 0;
 }
 
 int main (void) {
-    //asserts();
+    #ifndef __PROGTEST__
+        test_product_list();
+    #endif
 
     ProductList * product_list = new_product_list();
     int exit_code = main_loop(product_list);
