@@ -74,6 +74,8 @@ void product_list_remove(ProductList * list, Product * product) {
 
 // add product in front of before_product in list
 void product_list_insert_before(ProductList * list, Product * product, Product * before_product) {
+    product->next = product->prev = NULL;
+    
     if (before_product->prev) {
         product->prev = before_product->prev;
         product->prev->next = product;
@@ -143,15 +145,27 @@ void asserts(void) {
     product_increment(product_list, name1);
     product_increment(product_list, name3);
     product_increment(product_list, name2);
+    product_increment(product_list, name3);
+    product_increment(product_list, name3);
 
     Product * p = product_list->first;
-    assert(!strcmp(p->name, name1) && p->count == 3);
+    assert(!strcmp(p->name, name3));
+    assert(p->count == 4);
+    assert(!p->prev);
+    assert(!strcmp(p->next->name, name1));
     
     p = p->next;
-    assert(!strcmp(p->name, name3) && p->count == 2);
+    assert(!strcmp(p->name, name1));
+    assert(p->count == 3);
+    assert(!strcmp(p->prev->name, name3));
+    assert(!strcmp(p->next->name, name2));
 
     p = p->next;
-    assert(!strcmp(p->name, name2) && p->count == 1);
+    assert(!strcmp(p->name, name2));
+    assert(p->count == 1);
+    assert(!strcmp(p->prev->name, name1));
+    assert(!p->next);
+    assert(p == product_list->last);
 
     free_product_list(product_list);
 }
