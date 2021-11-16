@@ -3,7 +3,7 @@
 #include <string.h>
 #include <assert.h>
 
-#define NAME_LENGTH 99
+#define NAME_LENGTH 100
 
 typedef struct Product_s {
     char name[NAME_LENGTH];
@@ -21,6 +21,17 @@ typedef struct ProductList_s {
 ProductList * new_product_list(void) {
     ProductList * list = (ProductList *) calloc(1, sizeof(*list));
     return list;
+}
+
+// free ProductList and its elements
+void free_product_list(ProductList * list) {
+    for (Product * product = list->first; product; ) {
+        Product * next_product = product->next;
+        free(product);
+        product = next_product;
+    }
+
+    free(list);
 }
 
 // allocate new Product
@@ -124,23 +135,25 @@ void asserts(void) {
     char name3[NAME_LENGTH];
     strcpy(name3, "Maso");
 
-    ProductList * pl = new_product_list();
+    ProductList * product_list = new_product_list();
 
-    product_increment(pl, name1);
-    product_increment(pl, name1);
-    product_increment(pl, name3);
-    product_increment(pl, name1);
-    product_increment(pl, name3);
-    product_increment(pl, name2);
+    product_increment(product_list, name1);
+    product_increment(product_list, name1);
+    product_increment(product_list, name3);
+    product_increment(product_list, name1);
+    product_increment(product_list, name3);
+    product_increment(product_list, name2);
 
-    Product * p = pl->first;
-    assert(!strcpy(p->name, name1) && p->count == 3);
+    Product * p = product_list->first;
+    assert(!strcmp(p->name, name1) && p->count == 3);
     
     p = p->next;
-    assert(!strcpy(p->name, name3) && p->count == 2);
+    assert(!strcmp(p->name, name3) && p->count == 2);
 
     p = p->next;
-    assert(!strcpy(p->name, name2) && p->count == 1);
+    assert(!strcmp(p->name, name2) && p->count == 1);
+
+    free_product_list(product_list);
 }
 
 int main (void) {
