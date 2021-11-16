@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #define NAME_LENGTH 100
+#define INPUT_LINE_LENGTH 128
 
 typedef struct Product_s {
     char name[NAME_LENGTH];
@@ -127,6 +128,57 @@ void product_increment(ProductList * list, char name[NAME_LENGTH]) {
     product_list_insert_before(list, product, prev);   
 }
 
+int print_incorrect_input() {
+    printf("Nespravny vstup.\n");
+    return 1;
+}
+
+void print_top_products(ProductList * list, int leaderboard, int count) {
+    for (Product * product = list->first; product; product = product->next)
+        printf("%s %lld\n", product->name, product->count);
+}
+
+// query user for leaderboard count
+int get_top_count(int * top_count) {
+    char line[INPUT_LINE_LENGTH];
+    char * fgets_ret = fgets(line, INPUT_LINE_LENGTH, stdin);
+
+    // if EOF
+    if (fgets_ret == NULL)
+        return 1;
+
+    if (sscanf(line, " %d", top_count) != 1 || *top_count < 1)
+        return 1;
+
+    return 0;
+}
+
+// query user for command
+int get_input(char * operation, char name[NAME_LENGTH]) {
+    char line[INPUT_LINE_LENGTH];
+    char * fgets_ret = fgets(line, INPUT_LINE_LENGTH, stdin);
+
+    // if EOF
+    if (fgets_ret == NULL)
+        return 2;
+
+    int scanned = sscanf(line, " %1c %99s ", operation, name);
+
+    if (scanned < 1 || !(*operation == '+' || *operation == '#' || *operation == '?'))
+        return 1;
+
+    if (*operation == '+' && scanned != 2)
+        return 1;
+
+    if (*operation == '#' && scanned != 1)
+        return 1;
+
+    if (*operation == '?' && scanned != 1)
+        return 1;
+
+    return 0;
+}
+
 void asserts(void) {
     char name1[NAME_LENGTH];
     strcpy(name1, "Mleko");
@@ -170,8 +222,51 @@ void asserts(void) {
     free_product_list(product_list);
 }
 
-int main (void) {
-    asserts();
+// main program loop, returns program exit code
+int main_loop(ProductList * product_list) {
+    int top_count;
+    printf("Pocet sledovanych:\n");
+    if (get_top_count(&top_count))
+        return print_incorrect_input();
+
+    printf("Pozadavky:\n");
+    while (1) {
+        char operation = 0;
+        char name[NAME_LENGTH];
+
+        int input_result = get_input(&operation, name);
+
+        if (input_result == 1)
+            return print_incorrect_input();
+        else if (input_result == 2) // EOF
+            break;
+
+        switch (operation) {
+            case '+':
+                product_increment(product_list, name);
+                break;
+            case '#':
+                print_top_products(product_list, 1, top_count); // top products sum with leaderboard
+                break;
+            case '?':
+                print_top_products(product_list, 0, top_count); // just sum of top products
+                break;
+            default:
+                return 1;
+        }
+    }
+
     return 0;
+}
+
+int main (void) {
+    //asserts();
+
+    ProductList * product_list = new_product_list();
+    int exit_code = main_loop(product_list);
+
+    free_product_list(product_list);
+
+    return exit_code;
 }
 
