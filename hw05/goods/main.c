@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define NAME_LENGTH 99
 
@@ -17,7 +18,7 @@ typedef struct ProductList_s {
 } ProductList;
 
 // allocate new ProductList
-ProductList * new_product_list() {
+ProductList * new_product_list(void) {
     ProductList * list = (ProductList *) calloc(1, sizeof(*list));
     return list;
 }
@@ -113,7 +114,7 @@ void product_increment(ProductList * list, char name[NAME_LENGTH]) {
     product_list_insert_before(list, product, prev);   
 }
 
-int main (void) {
+void asserts(void) {
     char name1[NAME_LENGTH];
     strcpy(name1, "Mleko");
 
@@ -127,14 +128,23 @@ int main (void) {
 
     product_increment(pl, name1);
     product_increment(pl, name1);
-    product_increment(pl, name2);
+    product_increment(pl, name3);
     product_increment(pl, name1);
     product_increment(pl, name3);
     product_increment(pl, name2);
 
-    for (Product * product = pl->first; product; product = product->next)
-        printf("%s %lld\n", product->name, product->count);
+    Product * p = pl->first;
+    assert(!strcpy(p->name, name1) && p->count == 3);
+    
+    p = p->next;
+    assert(!strcpy(p->name, name3) && p->count == 2);
 
+    p = p->next;
+    assert(!strcpy(p->name, name2) && p->count == 1);
+}
+
+int main (void) {
+    asserts();
     return 0;
 }
 
