@@ -3,8 +3,10 @@
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
+#include <limits.h>
 
 #define NAME_LENGTH 100
+#define PRODUCT_INDEX_SIZE (UCHAR_MAX + 1)
 
 typedef struct Product_s {
     char * name;
@@ -17,6 +19,21 @@ typedef struct ProductList_s {
     Product * first;
     Product * last;
 } ProductList;
+
+typedef struct ProductIndexNode_s {
+    Product * product;
+    struct ProductIndexNode_s * next;
+} ProductIndexNode;
+
+typedef struct ProductIndexList_s {
+    ProductIndexNode * first;
+    ProductIndexNode * last;
+} ProductIndexList;
+
+typedef struct State_s {
+    ProductList * product_list;
+    ProductIndexList * product_index[PRODUCT_INDEX_SIZE]; // Products indexed by first letter
+} State;
 
 // allocate new ProductList
 ProductList * new_product_list(void) {
@@ -39,7 +56,6 @@ void free_product_list(ProductList * list) {
 // allocate new Product
 Product * new_product(char * name) {
     Product * product = (Product *) malloc(sizeof(*product));
-    //strcpy(product->name, name);
     product->name = name;
     product->count = 1;
     product->next = NULL;
@@ -48,18 +64,74 @@ Product * new_product(char * name) {
     return product;
 }
 
-// add a new product at the end of list
-void product_list_add(ProductList * list, char * name) {
-    Product * product = new_product(name);
+// allocate new ProductIndexList
+ProductIndexList * new_product_index(void) {
+    ProductIndexList * index = (ProductIndexList *) calloc(1, sizeof(*index));
+    return index;
+}
 
-    if (!list->first)
-        list->first = product;
-    else {
-        list->last->next = product;
-        product->prev = list->last;
+// free ProductIndexList and its elements
+void free_product_index(ProductIndexList * product_index) {
+    for (ProductIndexNode * node = product_index->first; node; ) {
+        ProductIndexNode * next_node = node->next;
+        free(node);
+        node = next_node;
     }
 
-    list->last = product;
+    free(product_index);
+}
+
+// allocate new ProductIndexNode
+ProductIndexNode * new_product_index_node(Product * product) {
+    ProductIndexNode * node = (ProductIndexNode *) malloc(sizeof(*node));
+    node->product = product;
+    node->next = NULL;
+
+    return node;
+}
+
+// allocate new State
+State * new_state(void) {
+    State * state = (State *) malloc(sizeof(*state));
+    state->product_list = new_product_list();
+    for (int i = 0; i < PRODUCT_INDEX_SIZE; i++)
+        state->product_index[i] = new_product_index();
+    
+    return state;
+}
+
+// free State nad its memebers
+void free_state(State * state) {
+    free_product_list(state->product_list);
+    for (int i = 0; i < PRODUCT_INDEX_SIZE; i++)
+        free_product_index(state->product_index[i]);
+
+    free(state);
+}
+
+// add a new product at the end of list
+void product_list_add(State * state, char * name) {
+    Product * product = new_product(name);
+
+    if (!state->product_list->first)
+        state->product_list->first = product;
+    else {
+        state->product_list->last->next = product;
+        product->prev = state->product_list->last;
+    }
+
+    state->product_list->last = product;
+
+    // also add a product reference to index by the first char of its name
+    ProductIndexNode * index_node = new_product_index_node(product);
+    ProductIndexList * index = state->product_index[name[0] - CHAR_MIN];
+    
+    if (!index->first)
+        index->first = index_node;
+    else
+        index->last->next = index_node;
+
+    index->last = index_node;
 }
 
 // remove product from list
@@ -92,20 +164,23 @@ void product_list_insert_before(ProductList * list, Product * product, Product *
 
 // increment the count of product in list if it exists or add a new one
 // returns 1 if a new product was created
-int product_increment(ProductList * list, char * name) {
-    // try to find the product
-    Product * product = list->first;
-    while (product) {
-        if (!strcmp(product->name, name))
+int product_increment(State * state, char * name) {
+    // try to find the product in index
+    ProductIndexNode * index_node = state->product_index[name[0] - CHAR_MIN]->first;
+    while (index_node) {
+        if (!strcmp(index_node->product->name, name))
             break;
         else
-            product = product->next;
+            index_node = index_node->next;
     }
 
-    if (!product) {
-        product_list_add(list, name);
+    if (!index_node) {
+        // such product doesn't exist yet
+        product_list_add(state, name);
         return 1;
     }
+
+    Product * product = index_node->product;
 
     product->count++;
     
@@ -121,14 +196,14 @@ int product_increment(ProductList * list, char * name) {
     if (prev == product->prev)
         return 0;
 
-    product_list_remove(list, product);
+    product_list_remove(state->product_list, product);
 
     if (!prev)
-        prev = list->first;
+        prev = state->product_list->first;
     else
         prev = prev->next;
     
-    product_list_insert_before(list, product, prev);
+    product_list_insert_before(state->product_list, product, prev);
 
     return 0;
 }
@@ -213,54 +288,8 @@ int get_input(char * operation, char ** name) {
     return clear_stdin();
 }
 
-#ifndef __PROGTEST__
-
-void test_product_list(void) {
-    char * name1 = (char *) malloc(sizeof(char) * NAME_LENGTH);
-    char * name2 = (char *) malloc(sizeof(char) * NAME_LENGTH);
-    char * name3 = (char *) malloc(sizeof(char) * NAME_LENGTH);
-
-    strcpy(name1, "Mleko");
-    strcpy(name2, "Pecivo");
-    strcpy(name3, "Maso");
-
-    ProductList * product_list = new_product_list();
-
-    product_increment(product_list, name1);
-    product_increment(product_list, name1);
-    product_increment(product_list, name3);
-    product_increment(product_list, name1);
-    product_increment(product_list, name3);
-    product_increment(product_list, name2);
-    product_increment(product_list, name3);
-    product_increment(product_list, name3);
-
-    Product * p = product_list->first;
-    assert(!strcmp(p->name, name3));
-    assert(p->count == 4);
-    assert(!p->prev);
-    assert(!strcmp(p->next->name, name1));
-    
-    p = p->next;
-    assert(!strcmp(p->name, name1));
-    assert(p->count == 3);
-    assert(!strcmp(p->prev->name, name3));
-    assert(!strcmp(p->next->name, name2));
-
-    p = p->next;
-    assert(!strcmp(p->name, name2));
-    assert(p->count == 1);
-    assert(!strcmp(p->prev->name, name1));
-    assert(!p->next);
-    assert(p == product_list->last);
-
-    free_product_list(product_list);
-}
-
-#endif
-
 // main program loop, returns program exit code
-int main_loop(ProductList * product_list) {
+int main_loop(State * state) {
     int top_count;
     printf("Pocet sledovanych:\n");
     if (get_top_count(&top_count))
@@ -287,13 +316,13 @@ int main_loop(ProductList * product_list) {
 
         switch (operation) {
             case '+':
-                free_name = !product_increment(product_list, name);
+                free_name = !product_increment(state, name);
                 break;
             case '#':
-                print_top_products(product_list, 1, top_count); // top products sum with leaderboard
+                print_top_products(state->product_list, 1, top_count); // top products sum with leaderboard
                 break;
             case '?':
-                print_top_products(product_list, 0, top_count); // just sum of top products
+                print_top_products(state->product_list, 0, top_count); // just sum of top products
                 break;
             default:
                 return 1;
@@ -307,14 +336,10 @@ int main_loop(ProductList * product_list) {
 }
 
 int main (void) {
-    #ifndef __PROGTEST__
-        test_product_list();
-    #endif
+    State * state = new_state();
+    int exit_code = main_loop(state);
 
-    ProductList * product_list = new_product_list();
-    int exit_code = main_loop(product_list);
-
-    free_product_list(product_list);
+    free_state(state);
 
     return exit_code;
 }
