@@ -26,11 +26,10 @@ int get_grid(State * state) {
     size_t first_line_capacity;
 
     state->n = getline(&first_line, &first_line_capacity, stdin);
-
-    if (state->n == -1)
-        return 0;
-
     state->n--; // \n
+
+    if (state->n <= 0)
+        return 0;
 
     state->grid = (char **) calloc(1, state->n * sizeof(*state->grid));
 
@@ -46,6 +45,11 @@ int get_grid(State * state) {
         state->grid[i][state->n] = '\0';
     }
 
+    // check for more input
+    char c = getc(stdin);
+    if (!(c == EOF || c == '\n'))
+        return 0;
+
     return 1;
 }
 
@@ -53,15 +57,10 @@ int get_grid(State * state) {
 //     moved here so that memory can be managed in main
 // return programs exit code
 int main_loop(State * state) {
+    printf("Hlavolam:\n");
+
     if (!get_grid(state))
         return print_invalid_input();
-
-    for (int i = 0; i < state->n; i++) {
-        //for (int j = 0; j < state->n; j++)
-        //    printf("%c", state->grid[i][j]);
-
-        printf("%s\n", state->grid[i]);
-    }
 
     return 0;
 }
