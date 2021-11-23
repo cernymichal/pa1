@@ -1,0 +1,3 @@
+Hlavolam:
+Nejdelsi opakujici se slova:
+kayak
