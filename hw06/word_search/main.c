@@ -3,66 +3,12 @@
 #include <string.h>
 #include <limits.h>
 
-#define CHAR_COUNT (UCHAR_MAX + 1)
-
-typedef struct HeapNode_s {
-    int count;
-    struct HeapNode_s * parent;
-    struct HeapNode_s * children; // array of CHAR_COUNT
-} HeapNode;
-
-HeapNode * new_heap_node_row(HeapNode * parent) {
-    HeapNode * array = (HeapNode *) malloc(CHAR_COUNT * sizeof(*array));
-    
-    for (int i = 0; i < CHAR_COUNT; i++) {
-        HeapNode * node = &array[i];
-        node->count = 0;
-        node->parent = parent;
-        node->children = NULL;
-    }
-
-    return array;
-}
-
-// ! doesn't actually free the node itself
-void free_heap_node(HeapNode * node) {
-    if (!node || !node->children)
-        return;
-
-    for (int i = 0; i < CHAR_COUNT; i++)
-        free_heap_node(&node->children[i]);
-
-    // since the nodes are stored in the array just free that
-    free(node->children);
-}
-
-typedef struct CharNode_s {
-    char character;
-    struct CharNode_s * next; // horizontally
-    struct CharNode_s * children; // linked list, vertically
-    struct CharNode_s * children_end;
-} CharNode;
-
-CharNode * new_char_node(void) {
-    return (CharNode *) calloc(1, sizeof(CharNode));
-}
-
-void free_char_node_list(CharNode ** first, CharNode ** last) {
-    while (*first) {
-        CharNode * next = (*first)->next;
-        free_char_node_list(&(*first)->children, &(*first)->children_end);
-        free(*first);
-        *first = next;
-    }
-
-    *last = NULL;
-}
+#define VECTOR_INITIAL_SIZE 16
+#define VECTOR_SIZE_FACTOR 2
 
 typedef struct State_s {
     char ** grid;
     int n;
-    HeapNode * heap;
-    CharNode * words;
 } State;
 
 void free_state(State * state) {
@@ -71,62 +17,97 @@ void free_state(State * state) {
         free(state->grid[i]);
 
     free(state->grid);
-
-    // heap
-    if (state->heap)
-        for (int i = 0; i < CHAR_COUNT; i++)
-            free_heap_node(&state->heap[i]);
-
-    free(state->heap);
-
-    // words
-    CharNode * last;
-    free_char_node_list(&state->words, &last);
 }
 
-typedef struct String_s {
+typedef struct VectorChar_s {
     char * string;
     int capacity;
     int n;
-} String;
+} VectorChar;
 
-String * new_string() {
-    String * string = (String *) malloc(sizeof(String));
+VectorChar * vector_char_new() {
+    VectorChar * vector = (VectorChar *) malloc(sizeof(VectorChar));
 
-    string->capacity = 16;
-    string->n = 0;
-    string->string = (char *) malloc(string->capacity * sizeof(char));
-    string->string[0] = 0;
+    vector->capacity = VECTOR_INITIAL_SIZE;
+    vector->n = 0;
+    vector->string = (char *) malloc(vector->capacity * sizeof(char));
+    vector->string[0] = 0;
 
-    return string;
+    return vector;
 }
 
-void free_string(String * string) {
-    free(string->string);
-    free(string);
+void vector_charfree(VectorChar * vector) {
+    free(vector->string);
+    free(vector);
 }
 
-String * string_copy(String * string) {
-    String * copied = new_string();
-    
-    copied->capacity = string->capacity;
-    copied->n = string->n;
+VectorChar * vector_char_copy(VectorChar * vector) {
+    VectorChar * copied = vector_char_new();
+
+    copied->capacity = vector->capacity;
+    copied->n = vector->n;
     copied->string = (char *) malloc(copied->capacity * sizeof(char));
-    strcpy(copied->string, string->string);
+    strcpy(copied->string, vector->string);
 
     return copied;
 }
 
-void string_push(String * string, char character) {
-    if (string->n + 2 > string->capacity) {
-        string->capacity *= 2;
-        string->string = (char *) realloc(string->string, string->capacity * sizeof(char));
+void vector_char_push(VectorChar * vector, char character) {
+    if (vector->n + 2 > vector->capacity) {
+        vector->capacity *= VECTOR_SIZE_FACTOR;
+        vector->string = (char *) realloc(vector->string, vector->capacity * sizeof(char));
     }
 
-    string->string[string->n++] = character;
-    string->string[string->n] = 0;
+    vector->string[vector->n++] = character;
+    vector->string[vector->n] = 0;
 }
 
+typedef struct VectorInt_s {
+    int * data;
+    int capacity;
+    int n;
+} VectorInt;
+
+VectorInt * vector_int_new() {
+    VectorInt * vector = (VectorInt *) malloc(sizeof(VectorInt));
+
+    vector->capacity = VECTOR_INITIAL_SIZE;
+    vector->n = 0;
+    vector->data = (int *) malloc(vector->capacity * sizeof(int));
+
+    return vector;
+}
+
+void vector_int_free(VectorInt * vector) {
+    free(vector->data);
+    free(vector);
+}
+
+void vector_int_clear(VectorInt * vector) {
+    vector->n = 0;
+}
+
+void vector_int_push(VectorInt * vector, int value) {
+    if (vector->n + 1 > vector->capacity) {
+        vector->capacity *= VECTOR_SIZE_FACTOR;
+        vector->data = (int *) realloc(vector->data, vector->capacity * sizeof(int));
+    }
+
+    vector->data[vector->n++] = value;
+}
+
+void vector_int_merge(VectorInt * vector, VectorInt * to_merge) {
+    if (vector->n + to_merge->n > vector->capacity) {
+        while (vector->n + to_merge->n > vector->capacity)
+            vector->capacity *= VECTOR_SIZE_FACTOR;
+        vector->data = (int *) realloc(vector->data, vector->capacity * sizeof(int));
+    }
+
+    for (int i = 0; i < to_merge->n; i++)
+        vector->data[vector->n++] = to_merge->data[i];
+}
+
+/*
 // add one of the readings (x_d, y_d) from x, y to the heap
 void add_word_to_heap(State * state, int x, int y, int x_d, int y_d) {
     HeapNode ** children = &state->heap;
@@ -158,50 +139,7 @@ void add_directions_to_heap(State * state, int x, int y) {
     add_word_to_heap(state, x, y, -1, 1);  // right-up
     add_word_to_heap(state, x, y, -1, -1); // left-up
 }
-
-// recursivelly search through the heap for the longes repeating words
-CharNode * find_max_depth(HeapNode * children, int * max_depth, int current_depth) {
-    CharNode * char_node = new_char_node();
-
-    if (current_depth > *max_depth)
-        *max_depth = current_depth;
-
-    int my_max_depth = current_depth;
-
-    if (children) {
-        for (int i = 0; i < CHAR_COUNT; i++) {
-            HeapNode * node = &children[i];
-            if (node->count > 1) {
-                int old_max_depth = my_max_depth;
-                CharNode * child_char = find_max_depth(node->children, &my_max_depth, current_depth + 1);
-                
-                if (!child_char || (current_depth == 0 && node->count == 8 && my_max_depth == 1)) {
-                    my_max_depth = old_max_depth;
-                    continue;
-                }
-
-                child_char->character = i + CHAR_MIN;
-            
-                if (my_max_depth > old_max_depth && char_node->children)
-                    free_char_node_list(&char_node->children, &char_node->children_end);
-
-                if (!char_node->children)
-                    char_node->children = child_char;
-                else
-                    char_node->children_end->next = child_char;
-
-                char_node->children_end = child_char;
-            }
-        }
-    }
-    
-    if (my_max_depth < *max_depth)
-        return NULL;
-
-    *max_depth = my_max_depth;
-
-    return char_node;
-}
+*/
 
 int print_invalid_input(void) {
     printf("Nespravny vstup.\n");
@@ -211,24 +149,6 @@ int print_invalid_input(void) {
 int print_no_reoccurring_words(void) {
     printf("Zadne opakujici se slovo.\n");
     return 0;
-}
-
-// recusivelly print all words from node, storing the prefix in beggining
-void print_words(String * beggining, CharNode * node) {
-    if (!node->children) {
-        printf("%s%c\n", beggining->string, node->character);
-        return;
-    }
-
-    if (node->character) {
-        beggining = string_copy(beggining);
-        string_push(beggining, node->character);
-    }
-
-    for (CharNode * child = node->children; child; child = child->next)
-        print_words(beggining, child);
-    
-    free_string(beggining);
 }
 
 // load grid from stdin
@@ -274,21 +194,10 @@ int main_loop(State * state) {
     if (!get_grid(state))
         return print_invalid_input();
 
-    // add all possible words to heap
-    for (int x = 0; x < state->n; x++)
-        for (int y = 0; y < state->n; y++) {
-            add_directions_to_heap(state, x, y);
-            printf("%lf%%\n", (x * y) / (double)(state->n * state->n)); 
-    }
-
-    int max_depth = 0;
-    state->words = find_max_depth(state->heap, &max_depth, 0);
-    
-    if (!state->words->children)
+    if (!1)
         return print_no_reoccurring_words();
     
     printf("Nejdelsi opakujici se slova:\n");
-    print_words(new_string(), state->words);
 
     return 0;
 }
@@ -296,8 +205,6 @@ int main_loop(State * state) {
 int main (void) {
     State state;
     state.grid = NULL;
-    state.heap = NULL;
-    state.words = NULL;
 
     int exit_code = main_loop(&state);
 
