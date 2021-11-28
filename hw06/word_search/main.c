@@ -6,6 +6,12 @@
 #define VECTOR_INITIAL_SIZE 16
 #define VECTOR_SIZE_FACTOR 2
 
+#define GRID_READING_X_AT(reading, i) (reading->x + reading->d_x * i)
+#define GRID_READING_Y_AT(reading, i) (reading->y + reading->d_y * i)
+
+// get the char in grid at index of reading
+#define GRID_READING_GET(grid, reading, i) (grid[GRID_READING_X_AT(reading, i)][GRID_READING_Y_AT(reading, i)])
+
 // a way of reading from grid moving in d_{x, y} from x, y for n characters
 typedef struct GridReading_s {
     int x;
@@ -15,24 +21,11 @@ typedef struct GridReading_s {
     int n;
 } GridReading;
 
-int grid_reading_x_at(GridReading * reading, int i) {
-    return reading->x + reading->d_x * i;
-}
-
-int grid_reading_y_at(GridReading * reading, int i) {
-    return reading->y + reading->d_y * i;
-}
-
-// get the char in grid at index of reading
-char grid_reading_get(char ** grid, GridReading * reading, int i) {
-    return grid[grid_reading_x_at(reading, i)][grid_reading_y_at(reading, i)];
-}
-
 // check if readings point to the same coordinate at i and j
 int grid_reading_pointing_compare(GridReading * reading_a, int i, GridReading * reading_b, int j) {
     return
-        grid_reading_x_at(reading_a, i) == grid_reading_x_at(reading_b, j)
-        && grid_reading_y_at(reading_a, i) == grid_reading_y_at(reading_b, j);
+        GRID_READING_X_AT(reading_a, i) == GRID_READING_X_AT(reading_b, j)
+        && GRID_READING_Y_AT(reading_a, i) == GRID_READING_Y_AT(reading_b, j);
 }
 
 // compare two readings like strings
@@ -41,7 +34,7 @@ int grid_reading_compare(char ** grid, GridReading * reading_a, GridReading * re
         return 0;
 
     for (int i = 0; i < reading_a->n; i++)
-        if (grid_reading_get(grid, reading_a, i) != grid_reading_get(grid, reading_b, i))
+        if (GRID_READING_GET(grid, reading_a, i) != GRID_READING_GET(grid, reading_b, i))
             return 0;
 
     return 1;
@@ -49,7 +42,7 @@ int grid_reading_compare(char ** grid, GridReading * reading_a, GridReading * re
 
 void grid_reading_print(char ** grid, GridReading * reading) {
     for (int i = 0; i < reading->n; i++)
-        printf("%c", grid_reading_get(grid, reading, i));
+        printf("%c", GRID_READING_GET(grid, reading, i));
 
     printf("\n");
 }
@@ -138,14 +131,14 @@ VectorGridReading * longest_common_substring(char ** grid, int * max_length, Gri
     // 2d array with possible common substrings
     int ** words = (int **) malloc(string_a->n * sizeof(*words));
     for (int i = 0; i < string_a->n; i++)
-        words[i] = (int *) calloc(string_b->n, sizeof(*words[i]));
+        words[i] = (int *) malloc(string_b->n * sizeof(*words[i]));
 
     // vector of the longest_readings, can contain non unique ones
     VectorGridReading * longest_readings = vector_reading_new();
 
     for (int i = 0; i < string_a->n; i++) {
         for (int j = 0; j < string_b->n; j++) {
-            if (grid_reading_get(grid, string_a, i) == grid_reading_get(grid, string_b, j)) {
+            if (GRID_READING_GET(grid, string_a, i) == GRID_READING_GET(grid, string_b, j)) {
                 if (i == 0 || j == 0)
                     words[i][j] = 1;
                 else
@@ -164,8 +157,8 @@ VectorGridReading * longest_common_substring(char ** grid, int * max_length, Gri
                     && !(*max_length == 1 && grid_reading_pointing_compare(string_a, i, string_b, j))
                 ) {
                     GridReading reading = {
-                        grid_reading_x_at(string_a, i),
-                        grid_reading_y_at(string_a, i),
+                        GRID_READING_X_AT(string_a, i),
+                        GRID_READING_Y_AT(string_a, i),
                         -string_a->d_x, // going backwards because i is the end of the word
                         -string_a->d_y,
                         *max_length
