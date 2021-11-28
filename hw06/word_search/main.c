@@ -118,7 +118,53 @@ void free_state(State * state) {
     vector_reading_free(state->longest_words);
 }
 
+// returns vector of the longest readings of the grid
+VectorGridReading * longest_common_substring(char ** grid, int * max_length, GridReading * string_a, GridReading * string_b) {
+    // 2d array with possible common substrings
+    int ** words = (int **) malloc(string_a->n * sizeof(*words));
+    for (int i = 0; i < string_a->n; i++)
+        words[i] = (int *) calloc(string_b->n, sizeof(*words[i]));
+
+    // vector of the longest_readings, can contain non unique ones
+    VectorGridReading * longest_readings = vector_reading_new();
+
+    for (int i = 0; i < string_a->n; i++) {
+        for (int j = 0; j < string_b->n; j++) {
+            if (grid_reading_get(grid, string_a, i) == grid_reading_get(grid, string_b, j)) {
+                if (i == 0 || j == 0)
+                    words[i][j] = 1;
+                else
+                    words[i][j] = words[i - 1][j - 1] + 1;
+
+                // new max_length found
+                if (words[i][j] > *max_length) {
+                    *max_length = words[i][j];
+                    vector_reading_clear(longest_readings);
+                }
+
+                if (words[i][j] == *max_length) {
+                    GridReading reading = {
+                        string_a->x + string_a->d_x * i,
+                        string_a->y + string_a->d_y * i,
+                        -string_a->d_x, // going backwards because i is the end of the word
+                        -string_a->d_y,
+                        *max_length
+                    };
+                    vector_reading_push(longest_readings, reading);
+                }
+
+                continue;
+            }
+
+            words[i][j] = 0;
+        }
     }
+
+    for (int i = 0; i < string_a->n; i++)
+        free(words[i]);
+    free(words);
+
+    return longest_readings;
 }
 
 // generates all possible readings of a given grid
@@ -249,6 +295,35 @@ VectorGridReading * create_grid_readings(State * state) {
     return grid_readings;
 }
 
+// for all possible readings of a grid find all repeating substrings of max_length
+// returns the length of the substrings
+int find_longest_repeating_words_in_grid(State * state) {
+    VectorGridReading * grid_readings = create_grid_readings(state);
+
+    int max_length = 0;
+
+    for (int i = 0; i < grid_readings->n; i++) {
+        for (int j = i + 1; j < grid_readings->n; j++) {
+            int old_max_length = max_length;
+
+            VectorGridReading * found_words = longest_common_substring(
+                state->grid, &max_length,
+                &grid_readings->data[i], &grid_readings->data[j]
+            );
+
+            if (max_length > old_max_length)
+                vector_reading_clear(state->longest_words);
+
+            vector_reading_merge_unique(state->grid, state->longest_words, found_words);
+            vector_reading_free(found_words);
+        }
+    }
+
+    vector_reading_free(grid_readings);
+
+    return max_length;
+}
+
 int print_invalid_input(void) {
     printf("Nespravny vstup.\n");
     return 1;
@@ -302,7 +377,7 @@ int main_loop(State * state) {
     if (!get_grid(state))
         return print_invalid_input();
 
-    int max_length = 0;
+    int max_length = find_longest_repeating_words_in_grid(state);
 
     if (!max_length)
         return print_no_reoccurring_words();
