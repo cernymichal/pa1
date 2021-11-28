@@ -15,9 +15,24 @@ typedef struct GridReading_s {
     int n;
 } GridReading;
 
+int grid_reading_x_at(GridReading * reading, int i) {
+    return reading->x + reading->d_x * i;
+}
+
+int grid_reading_y_at(GridReading * reading, int i) {
+    return reading->y + reading->d_y * i;
+}
+
 // get the char in grid at index of reading
 char grid_reading_get(char ** grid, GridReading * reading, int i) {
-    return grid[reading->x + reading->d_x * i][reading->y + reading->d_y * i];
+    return grid[grid_reading_x_at(reading, i)][grid_reading_y_at(reading, i)];
+}
+
+// check if readings point to the same coordinate at i and j
+int grid_reading_pointing_compare(GridReading * reading_a, int i, GridReading * reading_b, int j) {
+    return
+        grid_reading_x_at(reading_a, i) == grid_reading_x_at(reading_b, j)
+        && grid_reading_y_at(reading_a, i) == grid_reading_y_at(reading_b, j);
 }
 
 // compare two readings like strings
@@ -142,10 +157,15 @@ VectorGridReading * longest_common_substring(char ** grid, int * max_length, Gri
                     vector_reading_clear(longest_readings);
                 }
 
-                if (words[i][j] == *max_length) {
+                // current substring is of max_length and
+                // if substring is of one character make sure a and b dont point to the same coordinate
+                if (
+                    words[i][j] == *max_length
+                    && !(*max_length == 1 && grid_reading_pointing_compare(string_a, i, string_b, j))
+                ) {
                     GridReading reading = {
-                        string_a->x + string_a->d_x * i,
-                        string_a->y + string_a->d_y * i,
+                        grid_reading_x_at(string_a, i),
+                        grid_reading_y_at(string_a, i),
                         -string_a->d_x, // going backwards because i is the end of the word
                         -string_a->d_y,
                         *max_length
@@ -379,7 +399,7 @@ int main_loop(State * state) {
 
     int max_length = find_longest_repeating_words_in_grid(state);
 
-    if (!max_length)
+    if (!state->longest_words->n)
         return print_no_reoccurring_words();
     
     printf("Nejdelsi opakujici se slova:\n");
