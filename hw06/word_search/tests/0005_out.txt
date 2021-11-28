@@ -1,8 +1,8 @@
 Hlavolam:
 Nejdelsi opakujici se slova:
-, o
-H+H
-HBH
-e-e
 o ,
+, o
+HBH
+H+H
+e-e
 o o

@@ -388,7 +388,7 @@ int get_grid(State * state) {
     return 1;
 }
 
-// main part of program
+// main part of the program
 //     moved here so that memory can be managed in main
 // return programs exit code
 int main_loop(State * state) {
@@ -397,7 +397,7 @@ int main_loop(State * state) {
     if (!get_grid(state))
         return print_invalid_input();
 
-    int max_length = find_longest_repeating_words_in_grid(state);
+    find_longest_repeating_words_in_grid(state);
 
     if (!state->longest_words->n)
         return print_no_reoccurring_words();

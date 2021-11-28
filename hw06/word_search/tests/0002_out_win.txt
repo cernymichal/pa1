@@ -1,9 +1,0 @@
-Hlavolam:
-Nejdelsi opakujici se slova:
-atse
-esta
-rest
-test
-tser
-tset
-tttt
