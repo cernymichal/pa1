@@ -1,9 +1,9 @@
 Hlavolam:
 Nejdelsi opakujici se slova:
-tset
 test
-tser
+tset
 rest
+tser
 tttt
-atse
 esta
+atse

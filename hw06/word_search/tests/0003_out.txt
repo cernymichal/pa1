@@ -1,7 +1,7 @@
 Hlavolam:
 Nejdelsi opakujici se slova:
-aaaak
 kaaaa
+aaaak
 aaaaa
 aayaa
 kayak

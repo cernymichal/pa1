@@ -6,11 +6,7 @@
 #define VECTOR_INITIAL_SIZE 16
 #define VECTOR_SIZE_FACTOR 2
 
-#define GRID_READING_X_AT(reading, i) (reading->x + reading->d_x * i)
-#define GRID_READING_Y_AT(reading, i) (reading->y + reading->d_y * i)
-
-// get the char in grid at index of reading
-#define GRID_READING_GET(grid, reading, i) (grid[GRID_READING_X_AT(reading, i)][GRID_READING_Y_AT(reading, i)])
+// ============================== GridReading
 
 // a way of reading from grid moving in d_{x, y} from x, y for n characters
 typedef struct GridReading_s {
@@ -20,6 +16,12 @@ typedef struct GridReading_s {
     int d_y;
     int n;
 } GridReading;
+
+#define GRID_READING_X_AT(reading, i) ((reading)->x + (reading)->d_x * (i))
+#define GRID_READING_Y_AT(reading, i) ((reading)->y + (reading)->d_y * (i))
+
+// get the char in grid at a certain index of reading
+#define GRID_READING_GET(grid, reading, i) ((grid)[GRID_READING_X_AT(reading, i)][GRID_READING_Y_AT(reading, i)])
 
 // check if readings point to the same coordinate at i and j
 int grid_reading_pointing_compare(GridReading * reading_a, int i, GridReading * reading_b, int j) {
@@ -46,6 +48,10 @@ void grid_reading_print(char ** grid, GridReading * reading) {
 
     printf("\n");
 }
+
+// /============================= GridReading
+
+// ============================== VectorGridReading
 
 typedef struct VectorGridReading_s {
     GridReading * data;
@@ -109,6 +115,10 @@ void vector_reading_merge_unique(char ** grid, VectorGridReading * vector, Vecto
     }
 }
 
+// /============================= VectorGridReading
+
+// ============================== State
+
 typedef struct State_s {
     char ** grid;
     int n;
@@ -126,62 +136,67 @@ void free_state(State * state) {
     vector_reading_free(state->longest_words);
 }
 
+// /============================= State
+
 // returns vector of the longest readings of the grid
 VectorGridReading * longest_common_substring(char ** grid, int * max_length, GridReading * string_a, GridReading * string_b) {
-    // 2d array with possible common substrings
-    int ** words = (int **) malloc(string_a->n * sizeof(*words));
-    for (int i = 0; i < string_a->n; i++)
-        words[i] = (int *) malloc(string_b->n * sizeof(*words[i]));
-
-    // vector of the longest_readings, can contain non unique ones
+    // vector of the longest_readings, can contain non unique ones;
     VectorGridReading * longest_readings = vector_reading_new();
 
-    for (int i = 0; i < string_a->n; i++) {
-        for (int j = 0; j < string_b->n; j++) {
-            if (GRID_READING_GET(grid, string_a, i) == GRID_READING_GET(grid, string_b, j)) {
-                if (i == 0 || j == 0)
-                    words[i][j] = 1;
-                else
-                    words[i][j] = words[i - 1][j - 1] + 1;
+    for (int start_a = 0; start_a < string_a->n - (*max_length - 1); start_a++) {
+        char start_char = GRID_READING_GET(grid, string_a, start_a);
+        int start_b = 0;
 
-                // new max_length found
-                if (words[i][j] > *max_length) {
-                    *max_length = words[i][j];
-                    vector_reading_clear(longest_readings);
-                }
+        while (1) {
+            // move forward until start_char found
+            for (; start_b < string_b->n && GRID_READING_GET(grid, string_b, start_b) != start_char; start_b++);
 
-                // current substring is of max_length and
-                // if substring is of one character make sure a and b dont point to the same coordinate
-                if (
-                    words[i][j] == *max_length
-                    && !(*max_length == 1 && grid_reading_pointing_compare(string_a, i, string_b, j))
-                ) {
-                    GridReading reading = {
-                        GRID_READING_X_AT(string_a, i),
-                        GRID_READING_Y_AT(string_a, i),
-                        -string_a->d_x, // going backwards because i is the end of the word
-                        -string_a->d_y,
-                        *max_length
-                    };
-                    vector_reading_push(longest_readings, reading);
-                }
+            if (start_b == string_b->n)
+                break;
 
+            // match as many following characters as possible
+            int n = 1;
+            for (
+                ;
+                    start_a + n < string_a->n
+                    && start_b + n < string_b->n
+                    && GRID_READING_GET(grid, string_a, start_a + n) == GRID_READING_GET(grid, string_b, start_b + n)
+                ;
+                n++
+            );
+
+            start_b += n; // move behind current word
+
+            if (n < *max_length)
                 continue;
+
+            // new longest words found
+            if (n > *max_length) {
+                *max_length = n;
+                vector_reading_clear(longest_readings);
             }
 
-            words[i][j] = 0;
+            // dont push if word is a single character on the same coordinates
+            if (!(*max_length == 1 && grid_reading_pointing_compare(string_a, start_a, string_b, start_b - n))) {
+                // from start_char for n characters
+                GridReading reading = {
+                    GRID_READING_X_AT(string_a, start_a),
+                    GRID_READING_Y_AT(string_a, start_a),
+                    string_a->d_x,
+                    string_a->d_y,
+                    *max_length
+                };
+
+                vector_reading_push(longest_readings, reading);
+            }
         }
     }
-
-    for (int i = 0; i < string_a->n; i++)
-        free(words[i]);
-    free(words);
 
     return longest_readings;
 }
 
 // generates all possible readings of a given grid
-// *skipping one character diagonals
+// skipping one character diagonals
 //     horizonal           (forwards, backwards) * n
 //     vertical            (forwards, backwards) * n
 //     diagonal from left  (forwards, backwards) * (2n - 3)
@@ -316,7 +331,13 @@ int find_longest_repeating_words_in_grid(State * state) {
     int max_length = 0;
 
     for (int i = 0; i < grid_readings->n; i++) {
+        if (grid_readings->data[i].n < max_length)
+            continue;
+
         for (int j = i + 1; j < grid_readings->n; j++) {
+            if (grid_readings->data[j].n < max_length)
+                continue;
+
             int old_max_length = max_length;
 
             VectorGridReading * found_words = longest_common_substring(
