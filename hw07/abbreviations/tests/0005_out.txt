@@ -1,0 +1,402 @@
+Zkratka:
+Problemy:
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 12
+> limit 2: 30
+> limit 3: 30
+> limit 4: 30
+> limit 5: 30
+> 0
+> 0
+> 0
+> 0
+> 0
+"zpYfLohwstbGcuu szxrmntysOmgfkt cxvp a ebb xhj cnwxmlb c g axdlx mnnw"
+> 1
+"pajkYay qfLa dzdzndtyj  pGqkhjdhndb  cbysjsf xkOrusktnvnbxnm"
+"pajkyaY qfLa dzdzndtyj  pGqkhjdhndb  cbysjsf xkOrusktnvnbxnm"
+> 2
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+"Yj eksdmyzeeobimLphsmjurm  wmrtx tzk eyGtvxwrrbe mupkievOrvop vh rnaen vlah"
+"Yj eksdmyzeeobimLphsmjurm  wmrtx tzk eyGtvxwrrbe mupkievorvOp vh rnaen vlah"
+"yj eksdmYzeeobimLphsmjurm  wmrtx tzk eyGtvxwrrbe mupkievOrvop vh rnaen vlah"
+"yj eksdmYzeeobimLphsmjurm  wmrtx tzk eyGtvxwrrbe mupkievorvOp vh rnaen vlah"
+> 4
+> 0
+> 0
+"n d ajxm  feYLlonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcOxpwbl wp  bomo eh  ee osix"
+"n d ajxm  feYLlonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcoxpwbl wp  bOmo eh  ee osix"
+"n d ajxm  feYLlonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcoxpwbl wp  bomO eh  ee osix"
+"n d ajxm  feYLlonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcoxpwbl wp  bomo eh  ee Osix"
+"n d ajxm  feYlLonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcOxpwbl wp  bomo eh  ee osix"
+"n d ajxm  feYlLonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcoxpwbl wp  bOmo eh  ee osix"
+"n d ajxm  feYlLonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcoxpwbl wp  bomO eh  ee osix"
+"n d ajxm  feYlLonpyt  wzh ruz wwphais  iGake  ikskwdicvpkiirdzbdrmcoxpwbl wp  bomo eh  ee Osix"
+> 8
+> limit 1: 0
+"nmj pvYtLhbqenjpmoxfslGg bsgut gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslGg bsgut gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslgG bsgut gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslgG bsgut gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslgg bsGut gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslgg bsGut gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslgg bsgut Gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslgg bsgut Gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtLhbqenjpmoxfslgg bsgut gnl sjwy xki w asalqbi orGiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLGg bsgut gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLGg bsgut gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLgG bsgut gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLgG bsgut gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLgg bsGut gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLgg bsGut gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLgg bsgut Gnl sjwy xki w asalqbi Orgiacnd ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLgg bsgut Gnl sjwy xki w asalqbi orgiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfsLgg bsgut gnl sjwy xki w asalqbi orGiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfslgg bsgut gnL sjwy xki w asalqbi orGiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvYtlhbqenjpmoxfslgg bsgut gnl sjwy xki w asaLqbi orGiacnd Ohyp wfq zwusafebiapm lfi bsc"
+"nmj pvytlhbqenjpmoxfslgg bsgut gnl sjwY xki w asaLqbi orGiacnd Ohyp wfq zwusafebiapm lfi bsc"
+> 21
+> 0
+> limit 1: 32
+> limit 2: 48
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 4
+> limit 3: 4
+> limit 1: 0
+> limit 2: 1
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> limit 1: 0
+> 0
+> 0
+"mrjwwitgirnh cawezfne nfhhfjjqekefje ufqhlxbgrxqbk doop dvaagdgxnccul   dxbwY eh sL G lOkjdgv jr rlw"
+> 1
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 8
+> limit 2: 8
+> limit 3: 8
+> limit 4: 8
+> limit 5: 8
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> limit 1: 8
+> limit 2: 8
+> limit 3: 8
+> limit 4: 8
+> limit 5: 8
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> limit 1: 2
+> limit 2: 6
+> limit 3: 6
+> limit 4: 6
+> limit 5: 6
+> 0
+> 0
+> 0
+> 0
+> 0
+> 0
+> 0
+"fw vlltw  oobhYd mkk    oL mesuGOvcs  w km ksjeibhbnai bkqy"
+> 1
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 7
+> limit 3: 7
+> limit 1: 1
+> limit 2: 2
+> limit 3: 2
+> limit 4: 2
+> limit 5: 2
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 1: 0
+"lb tddkYodsdhbuw q yjhxtuqpw t vvwggr udsp yrLmclfiar e yw GuilddgpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkYodsdhbuw q yjhxtuqpw t vvwggr udsp yrLmclfiar e yw guilddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkYodsdhbuw q yjhxtuqpw t vvwggr udsp yrlmcLfiar e yw GuilddgpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkYodsdhbuw q yjhxtuqpw t vvwggr udsp yrlmcLfiar e yw guilddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkYodsdhbuw q yjhxtuqpw t vvwggr udsp yrlmclfiar e yw guiLddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q Yjhxtuqpw t vvwggr udsp yrLmclfiar e yw GuilddgpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q Yjhxtuqpw t vvwggr udsp yrLmclfiar e yw guilddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q Yjhxtuqpw t vvwggr udsp yrlmcLfiar e yw GuilddgpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q Yjhxtuqpw t vvwggr udsp yrlmcLfiar e yw guilddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q Yjhxtuqpw t vvwggr udsp yrlmclfiar e yw guiLddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q yjhxtuqpw t vvwggr udsp YrLmclfiar e yw GuilddgpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q yjhxtuqpw t vvwggr udsp YrLmclfiar e yw guilddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q yjhxtuqpw t vvwggr udsp YrlmcLfiar e yw GuilddgpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q yjhxtuqpw t vvwggr udsp YrlmcLfiar e yw guilddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q yjhxtuqpw t vvwggr udsp Yrlmclfiar e yw guiLddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+"lb tddkyodsdhbuw q yjhxtuqpw t vvwggr udsp yrlmclfiar e Yw guiLddGpOmnnf qvzh qzsspvlhirncdrvg wf"
+> 16
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> limit 2: 12
+> limit 3: 12
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 4
+> limit 2: 7
+> limit 3: 7
+> limit 4: 7
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> limit 1: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> 0
+> 0
+> 0
+> 0
+> 0
+"vmddoYsrmzywpme L tfye otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoYsrmzywpme l tfye otiyrs mph  fa Lja cq foil w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoYsrmzywpme l tfye otiyrs mph  fa lja cq foiL w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoYsrmzywpme l tfye otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmLa mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoYsrmzywpme l tfye otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmla mLvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzYwpme L tfye otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzYwpme l tfye otiyrs mph  fa Lja cq foil w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzYwpme l tfye otiyrs mph  fa lja cq foiL w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzYwpme l tfye otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmLa mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzYwpme l tfye otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmla mLvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfYe otiyrs mph  fa Lja cq foil w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfYe otiyrs mph  fa lja cq foiL w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfYe otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmLa mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfYe otiyrs mph  fa lja cq foil w np tkriq v rznuzfutw tmla mLvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfye otiYrs mph  fa Lja cq foil w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfye otiYrs mph  fa lja cq foiL w np tkriq v rznuzfutw tmla mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfye otiYrs mph  fa lja cq foil w np tkriq v rznuzfutw tmLa mlvmzq hz elxlbnGipoa cbOpf"
+"vmddoysrmzywpme l tfye otiYrs mph  fa lja cq foil w np tkriq v rznuzfutw tmla mLvmzq hz elxlbnGipoa cbOpf"
+> 18
+> 0
+> limit 1: 0
+> limit 2: 3
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> 0
+> limit 1: 18
+> limit 2: 56
+> limit 3: 60
+> limit 4: 60
+> 0
+> 0
+> 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+"bhdxo  buhizose xefzgopdYewifp zqfLlp Gs xzcwtizagz ml zOqleww   x cbskxba qttvy feezrjf"
+"bhdxo  buhizose xefzgopdYewifp zqfLlp gs xzcwtizaGz ml zOqleww   x cbskxba qttvy feezrjf"
+"bhdxo  buhizose xefzgopdYewifp zqflLp Gs xzcwtizagz ml zOqleww   x cbskxba qttvy feezrjf"
+"bhdxo  buhizose xefzgopdYewifp zqflLp gs xzcwtizaGz ml zOqleww   x cbskxba qttvy feezrjf"
+> 4
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> limit 1: 1
+> limit 2: 2
+> limit 3: 2
+> limit 4: 2
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
