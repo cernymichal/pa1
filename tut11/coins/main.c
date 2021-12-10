@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #define VECTOR_INITIAL_SIZE 10
 #define VECTOR_SIZE_FACTOR 2
+
+// ============================== VectorInt
 
 typedef struct VectorInt_s {
     int capacity;
@@ -55,6 +58,10 @@ void vector_int_sort(VectorInt * vector) {
     qsort(vector->data, vector->n, sizeof(int), compare_ints);
 }
 
+// /============================= VectorInt
+
+// ============================== Input
+
 int input_coins(VectorInt ** coin_values) {
     *coin_values = vector_int_new();
 
@@ -71,35 +78,50 @@ int input_coins(VectorInt ** coin_values) {
 }
 
 int input_value(int * value) {
-    if (scanf(" %d", value) != 1 || *value <= 0)
-        return feof(stdin) + 1;
+    int scanned = scanf(" %d", value);
+
+    if (scanned == EOF)
+        return 2;
+
+    if (scanned != 1 || *value < 0)
+        return 1;
 
     return 0;
 }
+
+// /============================= Input
+
+// ============================== Output
 
 int print_invalid_input(void) {
     printf("Nespravny vstup.\n");
     return 1;
 }
 
-int solve_value(VectorInt * coins, int value, int index) {
+// /============================= Output
+
+int solve_value(VectorInt * coins, int value) {
     if (!value)
         return 0;
 
-    if (index == coins->n && value)
-        return -1;
+    int min = INT_MAX;
 
-    int coin = coins->data[index];
-    int coin_count = value / coin;
+    for (int i = 0; i < coins->n; i++) {
+        int coin = coins->data[i];
 
-    printf("%d - %dx\n", coin, coin_count);
+        if (coin > value)
+            continue;
 
-    int rest = solve_value(coins, value % coin, index + 1);
+        int rest = solve_value(coins, value - coin);
+        
+        if (rest != INT_MAX && rest + 1 < min) {
+            min = rest + 1;
+            if (min == 1)
+                break;
+        }
+    }
 
-    if (rest == -1)
-        return solve_value(coins, value, index + 1);
-
-    return rest + coin_count;
+    return min;
 }
 
 int main(void) {
@@ -127,10 +149,9 @@ int main(void) {
                 break;
         }
 
-        int min_coins = solve_value(coins, value, 0);
+        int min_coins = solve_value(coins, value);
 
-        printf("%d ", value);
-        if (min_coins = -1)
+        if (min_coins == INT_MAX)
             printf("= nema reseni\n");
         else
             printf("= %d\n", min_coins);
