@@ -150,14 +150,11 @@ InputReturn input_abbreviation(State * state) {
         vector_char_push(state->abbreviation, tolower(line[read]));
     }
 
-    // check for excess characters
-    char excess = 0;
-    if (sscanf(&line[read], " %1c", &excess) && excess != 0) {
-        free(line);
-        return INPUT_INVALID;
-    }
-
     free(line);
+
+    // check for empty abbreviation
+    if (!state->abbreviation->n)
+        return INPUT_INVALID;
 
     return INPUT_OK;
 }
