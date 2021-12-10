@@ -7,6 +7,8 @@
 #define VECTOR_SIZE_FACTOR 2
 
 // ============================== VectorChar
+// arraylist wrapper for chars
+// null terminated
 
 typedef struct VectorChar_s {
     char * data;
@@ -53,6 +55,29 @@ void vector_char_push(VectorChar * vector, char value) {
     vector->data[vector->n] = 0;
 }
 
+// print vector with chars at indicies converted to upper case
+void vector_char_print_upper(VectorChar * vector, int * indicies, int indicies_count) {
+    int i = 0; // position in vector
+
+    for (int j = 0; j < indicies_count; j++) {
+        for (; i < indicies[j]; i++)
+            printf("%c", vector->data[i]);
+
+        printf("%c", toupper(vector->data[i]));
+        i++;
+    }
+
+    for (; i < vector->n; i++)
+        printf("%c", vector->data[i]);
+}
+
+// calls vector_char_print_upper but wraps it in quotes and adds a new line
+void vector_char_print_upper_qnl(VectorChar * vector, int * indicies, int indicies_count) {
+    printf("\"");
+    vector_char_print_upper(vector, indicies, indicies_count);
+    printf("\"\n");
+}
+
 // /============================= VectorChar
 
 // ============================== State
@@ -61,6 +86,7 @@ typedef struct State_s {
     VectorChar * abbreviation;
 } State;
 
+// doesn't free state itself, only contents
 void free_state(State * state) {
     vector_char_free(state->abbreviation);
 }
@@ -74,12 +100,12 @@ int print_invalid_input(void) {
     return 1;
 }
 
-void print_abbreviation_count(int count) {
-    printf("> %d\n", count);
+void print_abbreviation_count(long long count) {
+    printf("> %lld\n", count);
 }
 
-void print_abbreviation_limit_count(int limit, int count) {
-    printf("> limit %d: %d\n", limit, count);
+void print_abbreviation_limit_count(int limit, long long count) {
+    printf("> limit %d: %lld\n", limit, count);
 }
 
 // /============================= Output
@@ -183,8 +209,62 @@ InputReturn input_command(char * operation, int * chars_in_word, VectorChar ** p
 
 // /============================= Input
 
-void solve_abbreviation(State * state, VectorChar * phrase, int chars_in_word, int show_solutions) {
-    printf("TODO: Solve :)\n");
+// ============================== Phrase
+// current phrase parsed from a user command
+
+typedef struct Phrase_s {
+    VectorChar * phrase;
+    int show_solutions;
+    int chars_in_word;
+    int * indicies; // for tracing back solutions while printing
+} Phrase;
+
+// doesn't free phrase itself, only content
+void free_phrase(Phrase * phrase) {
+    vector_char_free(phrase->phrase);
+    free(phrase->indicies);
+}
+
+// /============================= Phrase
+
+// ran for each char of abbreviation
+// current_index - starting index in phrase
+// current_char - index of searched char in abbreviation
+// word_left - chars left in current word
+// returns the number of possible solutions
+long long solve_abbreviation_rec(State * state, Phrase * phrase, int current_index, int current_char, int word_left) {
+    long long solutions = 0;
+
+    // walk the phrase until the end
+    for (; current_index < phrase->phrase->n; current_index++) {
+        char phrase_char = phrase->phrase->data[current_index];
+
+        if (
+            word_left
+            && phrase_char == state->abbreviation->data[current_char]
+        ) {
+            phrase->indicies[current_char] = current_index;
+
+            // if last char was found
+            if (!state->abbreviation->data[current_char + 1]) {
+                if (phrase->show_solutions)
+                    vector_char_print_upper_qnl(phrase->phrase, phrase->indicies, state->abbreviation->n);
+
+                solutions++;
+            }
+            else
+                solutions += solve_abbreviation_rec(state, phrase, current_index + 1, current_char + 1, word_left - 1);
+        }
+        else if (isspace(phrase_char))
+            word_left = phrase->chars_in_word;
+    }
+
+    return solutions;
+}
+
+// wraps solve_abbreviation_rec with starting parameters
+long long solve_abbreviation(State * state, Phrase * phrase) {
+    return solve_abbreviation_rec(state, phrase, 0, 0, phrase->chars_in_word);
 }
 
 // main part of the program
@@ -206,11 +286,10 @@ int main_loop(State * state) {
 
     while (1) {
         char op = 0;
-        int chars_in_word = 0;
-        VectorChar * phrase = NULL;
+        Phrase phrase;
 
         // command input
-        switch (input_command(&op, &chars_in_word, &phrase)) {
+        switch (input_command(&op, &phrase.chars_in_word, &phrase.phrase)) {
             case INPUT_INVALID:
                 return print_invalid_input();
             case INPUT_EOF:
@@ -219,10 +298,26 @@ int main_loop(State * state) {
                 break;
         }
         
-        int show_solutions = op == '?' ? 1 : 0;
-        solve_abbreviation(state, phrase, chars_in_word, show_solutions);
+        phrase.show_solutions = op == '?' ? 1 : 0;
+        phrase.indicies = (int *) malloc(state->abbreviation->n * sizeof(int));
 
-        vector_char_free(phrase);
+        if (phrase.show_solutions) {
+            print_abbreviation_count(
+                solve_abbreviation(state, &phrase)
+            );
+        }
+        else {
+            int max = phrase.chars_in_word;
+            for (int i = 1; i <= max; i++) {
+                phrase.chars_in_word = i;
+                print_abbreviation_limit_count(
+                    i,
+                    solve_abbreviation(state, &phrase)
+                );
+            }
+        }
+
+        free_phrase(&phrase);
     }
 
     return 0;
