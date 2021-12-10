@@ -232,8 +232,8 @@ void free_phrase(Phrase * phrase) {
 long long solve_abbreviation_rec(State * state, Phrase * phrase, int current_index, int current_char, int word_left) {
     long long solutions = 0;
 
-    // walk the phrase until the end
-    for (; current_index < phrase->phrase->n; current_index++) {
+    // walk the phrase while the abbreviation can fit
+    for (; current_index < phrase->phrase->n - (state->abbreviation->n - current_char - 1); current_index++) {
         char phrase_char = phrase->phrase->data[current_index];
 
         if (
