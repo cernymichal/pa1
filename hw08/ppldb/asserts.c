@@ -158,6 +158,7 @@ int main() {
 
     doneAll(&a);
 
+    printf("ok! :)\n");
     return 0;
 }
 
