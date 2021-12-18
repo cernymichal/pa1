@@ -7,8 +7,7 @@
 
 #endif /* __PROGTEST__ */
 
-#define VECTOR_INITIAL_SIZE 10
-#define VECTOR_SIZE_FACTOR 2
+// ============================== Person
 
 typedef struct Person_s {
     int id;
@@ -34,8 +33,11 @@ void person_free(Person * person) {
     free(person);
 }
 
-int person_compare(Person * l, Person * r)
+int person_compare(Person ** lhs, Person ** rhs)
 {
+    Person * l = *lhs;
+    Person * r = *rhs;
+
     if (l->id < r->id)
         return -1;
     else if (l->id > r->id)
@@ -44,7 +46,12 @@ int person_compare(Person * l, Person * r)
     return 0;
 }
 
+// /============================= Person
+
 // ============================== VectorPerson
+
+#define VECTOR_INITIAL_SIZE 10
+#define VECTOR_SIZE_FACTOR 2
 
 typedef struct VectorPerson_s {
     Person ** data;
@@ -100,13 +107,17 @@ Person * vector_person_bsearch(VectorPerson * vector, int id) {
     Person key;
     key.id = id;
 
-    return (Person *) bsearch(
-        &key,
+    Person * key_p = &key;
+
+    Person ** result = (Person **) bsearch(
+        &key_p,
         vector->data,
         vector->n,
-        sizeof(Person *),
+        sizeof(*vector->data),
         (int (*)(void const *, void const *)) person_compare
     );
+
+    return result ? *result : NULL;
 }
 
 // /============================= VectorPerson
@@ -134,8 +145,30 @@ void doneAll(TDATABASE * db) {
 }
 
 int addPerson(TDATABASE * db, int id, const char * name, int id1, int id2) {
-    /* TODO */
-    return 0;
+    // check if id exists
+    if (id == 0 || vector_person_bsearch(db->people, id))
+        return 0;
+
+    // ancestors are the same person
+    if (id1 == id2 && id1 != 0)
+        return 0;
+
+    Person * ancestor1 = id1 != 0 ? vector_person_bsearch(db->people, id1) : NULL;
+
+    // ancestor1 id exists but the person was not found
+    if (id1 != 0 && !ancestor1)
+        return 0;
+
+    Person * ancestor2 = id2 != 0 ? vector_person_bsearch(db->people, id2) : NULL;
+
+    // ancestor2 id exists but the person was not found
+    if (id2 != 0 && !ancestor2)
+        return 0;
+
+    Person * person = person_new(id, (char *) name, ancestor1, ancestor2);
+    vector_person_push(db->people, person);
+
+    return 1;
 }
 
 TRESULT * ancestors(TDATABASE * db, int id) {
@@ -149,7 +182,11 @@ TRESULT * commonAncestors(TDATABASE * db, int id1, int id2) {
 }
 
 void freeResult(TRESULT * res) {
-    /* TODO */
+    while (res) {
+        TRESULT * temp = res;
+        res = res->m_Next;
+        free(temp);
+    }
 }
 
 #ifndef __PROGTEST__
