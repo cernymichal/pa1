@@ -122,9 +122,7 @@ Person * vector_person_bsearch(VectorPerson * vector, int id) {
 
 // /============================= VectorPerson
 
-typedef struct TDatabase {
-    VectorPerson * people;
-} TDATABASE;
+// ============================== TResult
 
 #ifndef __PROGTEST__
 
@@ -136,49 +134,14 @@ typedef struct TResult {
 
 #endif /* __PROGTEST__ */
 
-void initAll(TDATABASE * db) {
-    db->people = vector_person_new();
-}
+TRESULT * tresult_new(int id, char * name, TRESULT * next) {
+    TRESULT * tresult = (TRESULT *) malloc(sizeof(*tresult));
 
-void doneAll(TDATABASE * db) {
-    vector_person_free(db->people);
-}
+    tresult->m_Next = next;
+    tresult->m_ID = id;
+    tresult->m_Name = name;
 
-int addPerson(TDATABASE * db, int id, const char * name, int id1, int id2) {
-    // check if id exists
-    if (id == 0 || vector_person_bsearch(db->people, id))
-        return 0;
-
-    // ancestors are the same person
-    if (id1 == id2 && id1 != 0)
-        return 0;
-
-    Person * ancestor1 = id1 != 0 ? vector_person_bsearch(db->people, id1) : NULL;
-
-    // ancestor1 id exists but the person was not found
-    if (id1 != 0 && !ancestor1)
-        return 0;
-
-    Person * ancestor2 = id2 != 0 ? vector_person_bsearch(db->people, id2) : NULL;
-
-    // ancestor2 id exists but the person was not found
-    if (id2 != 0 && !ancestor2)
-        return 0;
-
-    Person * person = person_new(id, (char *) name, ancestor1, ancestor2);
-    vector_person_push(db->people, person);
-
-    return 1;
-}
-
-TRESULT * ancestors(TDATABASE * db, int id) {
-    /* TODO */
-    return NULL;
-}
-
-TRESULT * commonAncestors(TDATABASE * db, int id1, int id2) {
-    /* TODO */
-    return NULL;
+    return tresult;
 }
 
 void freeResult(TRESULT * res) {
@@ -188,6 +151,135 @@ void freeResult(TRESULT * res) {
         free(temp);
     }
 }
+
+TRESULT * tresult_merge_unique(TRESULT * a, TRESULT * b) {
+    if (!a)
+        return b;
+
+    if (!b)
+        return a;
+
+    TRESULT ** current_a = &a;
+    for (; *current_a; current_a = &(*current_a)->m_Next) {
+        for (TRESULT ** current_b = &b; *current_b; current_b = &(*current_b)->m_Next) {
+            if ((*current_a)->m_ID != (*current_b)->m_ID)
+                continue;
+
+            TRESULT * temp = *current_b;
+            *current_b = (*current_b)->m_Next;
+            free(temp);
+            break;
+        }
+    }
+
+    *current_a = b;
+
+    return a;
+}
+
+TRESULT * tresult_intersection(TRESULT * a, TRESULT * b) {
+    TRESULT * result = NULL;
+    for (TRESULT * current_a = a; current_a; current_a = current_a->m_Next) {
+        for (TRESULT * current_b = b; current_b; current_b = current_b->m_Next) {
+            if (current_a->m_ID != current_b->m_ID)
+                continue;
+
+            result = tresult_new(current_a->m_ID, current_a->m_Name, result);
+            break;
+        }
+    }
+
+    return result;
+}
+
+// /============================= TResult
+
+// ============================== TDatabase
+
+typedef struct TDatabase {
+    VectorPerson * people;
+} TDATABASE;
+
+void initAll(TDATABASE * db) {
+    db->people = vector_person_new();
+}
+
+void doneAll(TDATABASE * db) {
+    vector_person_free(db->people);
+}
+
+int addPerson(TDATABASE * db, int id, const char * name, int id1, int id2) {
+    if (id == 0 || vector_person_bsearch(db->people, id))
+        return 0;
+
+    if (id1 == id2 && id1 != 0)
+        return 0;
+
+    Person * ancestor1 = id1 != 0 ? vector_person_bsearch(db->people, id1) : NULL;
+
+    if (id1 != 0 && !ancestor1)
+        return 0;
+
+    Person * ancestor2 = id2 != 0 ? vector_person_bsearch(db->people, id2) : NULL;
+
+    if (id2 != 0 && !ancestor2)
+        return 0;
+
+    Person * person = person_new(id, (char *) name, ancestor1, ancestor2);
+    vector_person_push(db->people, person);
+
+    return 1;
+}
+
+TRESULT * ancestors_rec(TDATABASE * db, Person * person) {
+    if (!person)
+        return NULL;
+
+    TRESULT * result = NULL;
+
+    if (person->ancestor1) {
+        result = tresult_merge_unique(
+            result,
+            tresult_new(person->ancestor1->id, person->ancestor1->name, NULL)
+        );
+        result = tresult_merge_unique(
+            result,
+            ancestors_rec(db, person->ancestor1)
+        );
+    }
+
+    if (person->ancestor2) {
+        result = tresult_merge_unique(
+            result,
+            tresult_new(person->ancestor2->id, person->ancestor2->name, NULL)
+        );
+        result = tresult_merge_unique(
+            result,
+            ancestors_rec(db, person->ancestor2)
+        );
+    }
+
+    return result;
+}
+
+TRESULT * ancestors(TDATABASE * db, int id) {
+    Person * person = vector_person_bsearch(db->people, id);
+    return ancestors_rec(db, person);
+}
+
+TRESULT * commonAncestors(TDATABASE * db, int id1, int id2) {
+    TRESULT * ancestors1 = ancestors(db, id1);
+    TRESULT * ancestors2 = ancestors(db, id2);
+
+    TRESULT * result = tresult_intersection(ancestors1, ancestors2);
+
+    freeResult(ancestors1);
+    freeResult(ancestors2);
+
+    return result;
+}
+
+// /============================= TDatabase
 
 #ifndef __PROGTEST__
 
