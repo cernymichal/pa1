@@ -38,7 +38,7 @@ int str_is_palindrome(char * str) {
     for (int i = 0; i < len_str; i++) {
         if (str[i] != ' ') {
             no_spaces[len_ns] = str[i];
-            j++;
+            i++;
         }
     }
 
