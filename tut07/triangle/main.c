@@ -14,8 +14,8 @@ int get_input(double * x, double * y) {
 }
 
 int on_side(double ax, double ay, double bx, double by, double cx, double cy, double xx, double xy) {
-    ux = bx - ax;
-    uy = by - ay;
+    double ux = bx - ax;
+    double uy = by - ay;
     
     // TODO
 
