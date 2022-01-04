@@ -1,0 +1,2 @@
+Zadejte a, b, c (oddelene mezerami):
+Nespravny vstup.
