@@ -1,0 +1,214 @@
+Zkratka:
+Problemy:
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> limit 1: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> limit 1: 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 1: 0
+> limit 1: 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> 0
+> limit 1: 0
+> 0
+> 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 2: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> 0
+> limit 1: 0
+> 0
+> 0
+> limit 1: 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 1: 0
+> limit 1: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> 0
+> 0
+> 0
+> 0
+> 0
+> limit 1: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> 0
+> limit 1: 0
+> limit 2: 0
+> limit 3: 0
+> limit 4: 0
+> limit 5: 0
+> 0
